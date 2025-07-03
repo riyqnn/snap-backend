@@ -1,8 +1,10 @@
 const express = require('express');
-const nftRoutes = require('./routes/nftRoutes'); // pastikan path-nya benar
+const cors = require('cors');
+const multer = require('multer');
+require('dotenv').config();
+
+const nftRoutes = require('./routes/nftRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const verifyRoutes = require('./routes/verifyRoutes');
 
 const app = express();
-app.use(express.json());
-app.use('/api', nftRoutes); 
-
-module.exports = app;
