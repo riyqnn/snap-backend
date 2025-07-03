@@ -1,14 +1,14 @@
 const PinataService = require('../utils/pinataService');
-const BlockchainService = require('../utils/blockchainService');
+const BlockchainService = require('../utils/blockchainServiceblockchain');
 const ethers = require('ethers');
 
 class BrandController {
   async createBrand(req, res) {
     try {
-      const { brandName, privateKey, value } = req.body;
+      const { brandName, description, registrationDate, privateKey, value } = req.body;
       const file = req.file; // Assuming multer is used for file upload
 
-      if (!brandName || !privateKey || !value || !file) {
+      if (!brandName || !description || !registrationDate || !privateKey || !value || !file) {
         return res.status(400).json({
           success: false,
           message: 'Missing required parameters or file'
@@ -25,10 +25,11 @@ class BrandController {
       // Step 2: Create JSON metadata
       const metadata = {
         name: `${process.env.NAME_PREFIX || 'Brand_'}${brandName}`,
-        description: `Brand NFT for ${brandName}`,
-        image: `ipfs://${imageCID}`,
+        description: description,
+        image: `https://indigo-legislative-mackerel-269.mypinata.cloud/ipfs/${imageCID}`,
         attributes: [
-          { trait_type: 'Brand', value: brandName }
+          { trait_type: "verified", value: "Yes" },
+          { trait_type: "registrationDate", value: registrationDate }
         ]
       };
 
@@ -46,6 +47,7 @@ class BrandController {
           imageCID,
           jsonCID,
           metadataURI,
+          metadata,
           transaction: result
         }
       });
