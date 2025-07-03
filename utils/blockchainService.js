@@ -1,4 +1,4 @@
-const { initializeContract } = require('../config/');
+const { initializeContract } = require('../config/contractConfig');
 const ethers = require('ethers');
 
 class BlockchainService {
