@@ -4,16 +4,20 @@ class BrandController {
   async createBrand(req, res) {
     try {
       const { brandName, description, registrationDate } = req.body;
-      const file = req.file; // multer parses file
+      const file = req.file;
 
+      // Validasi input
       if (!brandName || !description || !registrationDate || !file) {
-        return res.status(400).json({ success: false, message: 'Missing required fields or file' });
+        return res.status(400).json({
+          success: false,
+          message: 'Missing required fields or logo file'
+        });
       }
 
-      // Step 1: Upload image to Pinata
+      // === Step 1: Upload file image ke Pinata ===
       const imageCID = await PinataService.uploadFile(file.buffer, `${brandName}_logo`);
 
-      // Step 2: Build JSON metadata
+      // === Step 2: Buat JSON metadata ===
       const metadata = {
         name: `Brand_${brandName}`,
         description,
@@ -24,12 +28,13 @@ class BrandController {
         ]
       };
 
-      // Step 3: Upload JSON metadata
+      // === Step 3: Upload metadata JSON ke Pinata ===
       const jsonCID = await PinataService.uploadJSON(metadata, `${brandName}_metadata.json`);
 
-      res.status(200).json({
+      // === Step 4: Kirim response sukses ===
+      return res.status(200).json({
         success: true,
-        message: 'Metadata uploaded successfully',
+        message: 'Brand metadata uploaded successfully',
         data: {
           imageCID,
           jsonCID,
@@ -38,7 +43,10 @@ class BrandController {
         }
       });
     } catch (error) {
-      res.status(500).json({ success: false, message: error.message });
+      return res.status(500).json({
+        success: false,
+        message: error.message
+      });
     }
   }
 }
