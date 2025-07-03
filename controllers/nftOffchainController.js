@@ -45,6 +45,49 @@ class NftOffchainController {
       res.status(500).json({ error: 'Failed to mint NFTs offchain' });
     }
   }
+  
+  async getBySeriesId(req, res) {
+    try {
+      const { series_id } = req.params;
+
+      const { data, error } = await supabase
+        .from('product_nfts')
+        .select('*')
+        .eq('series_id', series_id);
+
+      if (error) throw error;
+
+      if (data.length === 0) {
+        return res.status(404).json({ success: false, message: 'No NFTs found for this series' });
+      }
+
+      res.status(200).json({ success: true, data });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+    }
+  }
+
+  async getByVerifyCode(req, res) {
+    try {
+      const { code } = req.params;
+
+      const { data, error } = await supabase
+        .from('product_nfts')
+        .select('*')
+        .eq('verify_code', code)
+        .limit(1);
+
+      if (error) throw error;
+
+      if (!data || data.length === 0) {
+        return res.status(404).json({ success: false, message: 'NFT not found' });
+      }
+
+      res.status(200).json({ success: true, data: data[0] });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err.message });
+    }
+  }
 }
 
 module.exports = new NftOffchainController();
