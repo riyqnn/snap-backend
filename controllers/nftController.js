@@ -1,6 +1,6 @@
 const PinataService = require('../utils/pinataService');
 const BlockchainService = require('../utils/blockchainService');
-const { generateVerifyCode } = require('../utils/verifyCodeGenerator');
+const { generateVerifyCode } = require('../utils/codeGenerator');
 const { supabase } = require('../utils/supabaseClient');
 
 class NFTController {
