@@ -1,5 +1,5 @@
 const PinataService = require('../utils/pinataService');
-const BlockchainService = require('../utils/blockchainServiceblockchain');
+const BlockchainService = require('../utils/blockchainService');
 const ethers = require('ethers');
 
 class BrandController {
