@@ -1,61 +1,44 @@
 const PinataService = require('../utils/pinataService');
-const BlockchainService = require('../utils/blockchainService');
-const ethers = require('ethers');
 
 class BrandController {
   async createBrand(req, res) {
     try {
-      const { brandName, description, registrationDate, privateKey, value } = req.body;
-      const file = req.file; // Assuming multer is used for file upload
+      const { brandName, description, registrationDate } = req.body;
+      const file = req.file; // multer parses file
 
-      if (!brandName || !description || !registrationDate || !privateKey || !value || !file) {
-        return res.status(400).json({
-          success: false,
-          message: 'Missing required parameters or file'
-        });
+      if (!brandName || !description || !registrationDate || !file) {
+        return res.status(400).json({ success: false, message: 'Missing required fields or file' });
       }
 
-      // Initialize wallet
-      const provider = new ethers.providers.JsonRpcProvider(process.env.WEB3_PROVIDER_URL);
-      const wallet = new ethers.Wallet(privateKey, provider);
-
       // Step 1: Upload image to Pinata
-      const imageCID = await PinataService.uploadFile(file.buffer, `${brandName}_image`);
+      const imageCID = await PinataService.uploadFile(file.buffer, `${brandName}_logo`);
 
-      // Step 2: Create JSON metadata
+      // Step 2: Build JSON metadata
       const metadata = {
-        name: `${process.env.NAME_PREFIX || 'Brand_'}${brandName}`,
-        description: description,
-        image: `https://indigo-legislative-mackerel-269.mypinata.cloud/ipfs/${imageCID}`,
+        name: `Brand_${brandName}`,
+        description,
+        image: `https://gateway.pinata.cloud/ipfs/${imageCID}`,
         attributes: [
-          { trait_type: "verified", value: "Yes" },
-          { trait_type: "registrationDate", value: registrationDate }
+          { trait_type: 'verified', value: 'Yes' },
+          { trait_type: 'registrationDate', value: registrationDate }
         ]
       };
 
-      // Step 3: Upload JSON metadata to Pinata
+      // Step 3: Upload JSON metadata
       const jsonCID = await PinataService.uploadJSON(metadata, `${brandName}_metadata.json`);
-
-      // Step 4: Call verifyBrand with JSON CID
-      const metadataURI = `ipfs://${jsonCID}`;
-      const result = await BlockchainService.verifyBrand(metadataURI, wallet, value);
 
       res.status(200).json({
         success: true,
-        message: 'Brand NFT created and verified successfully',
+        message: 'Metadata uploaded successfully',
         data: {
           imageCID,
           jsonCID,
-          metadataURI,
-          metadata,
-          transaction: result
+          metadataURI: `ipfs://${jsonCID}`,
+          metadata
         }
       });
     } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: error.message
-      });
+      res.status(500).json({ success: false, message: error.message });
     }
   }
 }

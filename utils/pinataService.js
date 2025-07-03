@@ -3,28 +3,29 @@ const pinata = new pinataSDK(process.env.PINATA_API_KEY, process.env.PINATA_SECR
 
 class PinataService {
   async uploadFile(fileBuffer, fileName) {
+    const options = {
+      pinataMetadata: { name: fileName },
+      pinataOptions: { cidVersion: 0 }
+    };
     try {
-      const options = {
-        pinataMetadata: { name: fileName },
-        pinataOptions: { cidVersion: 0 }
-      };
-      const result = await pinata.pinFileToIPFS(fileBuffer, options);
+      const readableStream = require('streamifier').createReadStream(fileBuffer);
+      const result = await pinata.pinFileToIPFS(readableStream, options);
       return result.IpfsHash;
     } catch (error) {
-      throw new Error(`Failed to upload file to Pinata: ${error.message}`);
+      throw new Error(`Upload file failed: ${error.message}`);
     }
   }
 
   async uploadJSON(jsonData, fileName) {
+    const options = {
+      pinataMetadata: { name: fileName },
+      pinataOptions: { cidVersion: 0 }
+    };
     try {
-      const options = {
-        pinataMetadata: { name: fileName },
-        pinataOptions: { cidVersion: 0 }
-      };
       const result = await pinata.pinJSONToIPFS(jsonData, options);
       return result.IpfsHash;
     } catch (error) {
-      throw new Error(`Failed to upload JSON to Pinata: ${error.message}`);
+      throw new Error(`Upload JSON failed: ${error.message}`);
     }
   }
 }
