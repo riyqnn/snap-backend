@@ -2,7 +2,7 @@ const { ethers } = require('ethers');
 const PinataService = require('../utils/pinataService');
 const BlockchainService = require('../utils/blockchainService');
 const { generateVerifyCode } = require('../utils/codeGenerator');
-const { supabase } = require('../database/supabaseClient');
+const  supabase  = require('../database/supabaseClient');
 
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
 const wallet = new ethers.Wallet(process.env.ADMIN_PRIVATE_KEY, provider);
