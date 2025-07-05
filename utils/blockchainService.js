@@ -1,4 +1,4 @@
-const { parseEther } = require('ethers');
+const { ethers, parseEther } = require('ethers');
 const { initializeContract } = require('../config/contractConfig');
 
 const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
