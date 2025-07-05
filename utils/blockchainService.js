@@ -2,12 +2,12 @@ const { initializeContract } = require('../config/contractConfig');
 const ethers = require('ethers');
 
 class BlockchainService {
-  async verifyBrand(metadataURI, wallet, value) {
+  async verifyBrand(metadataURI, signer, value) {
     try {
-      const contract = initializeContract(wallet);
+      const contract = initializeContract(signer);
       const tx = await contract.verifyBrand(metadataURI, {
         value: ethers.utils.parseEther(value.toString()),
-        gasLimit: 100000 // Adjust gas limit as needed
+        gasLimit: 100000
       });
       const receipt = await tx.wait();
       return {
@@ -17,6 +17,16 @@ class BlockchainService {
       };
     } catch (error) {
       throw new Error(`Failed to verify brand: ${error.message}`);
+    }
+  }
+
+  async isVerified(address, signer) {
+    try {
+      const contract = initializeContract(signer);
+      const result = await contract.isVerified(address);
+      return result;
+    } catch (error) {
+      throw new Error(`Failed to check verification status: ${error.message}`);
     }
   }
 }
