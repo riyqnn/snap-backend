@@ -97,9 +97,9 @@ class BrandController {
 
     const { data, error } = await supabase
       .from('brands')
-      .select('*')
-      .eq('brand_owner', wallet)
-      .single();
+      .select('metadata_uri')
+      .eq('brand_owner', wallet);
+
 
     if (error) throw new Error(`Supabase query error: ${error.message}`);
     if (!data) {
