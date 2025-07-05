@@ -43,13 +43,13 @@ class BrandController {
       const metadataURI = `ipfs://${jsonCID}`;
 
       // Step 4: Verify onchain
-      const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
-      const wallet = new ethers.Wallet(process.env.ADMIN_PRIVATE_KEY, provider);
+      // const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+      // const wallet = new ethers.Wallet(process.env.ADMIN_PRIVATE_KEY, provider);
 
-      await BlockchainService.verifyBrand(metadataURI, wallet, value);
+      // await BlockchainService.verifyBrand(metadataURI, wallet, value);
 
       // Step 5: Check isVerified from contract
-      const isVerified = await BlockchainService.isVerified(brandOwner, wallet);
+      // const isVerified = await BlockchainService.isVerified(brandOwner, wallet);
 
       // Step 6: Save to Supabase
       const { error: dbError } = await supabase
@@ -58,7 +58,7 @@ class BrandController {
           brand_name: brandName,
           metadata_uri: metadataURI,
           brand_owner: brandOwner,
-          is_verified: isVerified
+          // is_verified: isVerified
         });
 
       if (dbError) throw new Error(`Supabase insert error: ${dbError.message}`);
@@ -72,7 +72,7 @@ class BrandController {
           brandOwner,
           imageCID,
           metadataURI,
-          isVerified
+          // isVerified
         }
       });
     } catch (error) {
