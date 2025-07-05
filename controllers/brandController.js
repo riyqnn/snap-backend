@@ -6,10 +6,10 @@ const { ethers } = require('ethers');
 class BrandController {
   async createBrand(req, res) {
     try {
-      const { brandName, description, registrationDate, brandOwner, value } = req.body;
+      const { brandName, description, registrationDate, brandOwner } = req.body;
       const file = req.file;
 
-      if (!brandName || !description || !registrationDate || !brandOwner || !value || !file) {
+      if (!brandName || !description || !registrationDate || !brandOwner ||  !file) {
         return res.status(400).json({
           success: false,
           message: 'Missing required fields: brandName, description, registrationDate, brandOwner, value, or logo'

@@ -1,4 +1,4 @@
-const ethers = require('ethers');
+const { ethers } = require('ethers');
 require('dotenv').config();
 
 const contractABI = [
@@ -14,12 +14,32 @@ const contractABI = [
     "outputs": [],
     "stateMutability": "payable",
     "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "isVerified",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
   }
 ];
 
-exports.initializeContract = (wallet) => {
-    if (!process.env.CONTRACT_ADDRESS) {
-        throw new Error('CONTRACT_ADDRESS is not set in environment variables');
-    }
-    return new ethers.Contract(process.env.CONTRACT_ADDRESS, contractABI, wallet);
+exports.initializeContract = (signer) => {
+  const contractAddress = process.env.CONTRACT_ADDRESS;
+  if (!contractAddress) {
+    throw new Error('❌ CONTRACT_ADDRESS is not set in .env');
+  }
+  return new ethers.Contract(contractAddress, contractABI, signer);
 };
