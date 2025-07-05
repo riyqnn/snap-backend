@@ -1,16 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Create NFT Series</title>
 </head>
 <body>
   <h2>Buat NFT Series</h2>
+
   <form id="nftForm" enctype="multipart/form-data">
-    <label>Series ID:<br><input type="number" name="seriesId" required /></label><br><br>
-    <label>Max Supply:<br><input type="number" name="maxSupply" required /></label><br><br>
-    <label>Brand Owner Wallet:<br><input type="text" name="brandOwner" required /></label>
-    
+    <label>Series ID:<br>
+      <input type="number" name="seriesId" required />
+    </label><br><br>
+
+    <label>Max Supply:<br>
+      <input type="number" name="maxSupply" required />
+    </label><br><br>
+
+    <label>Brand Owner Wallet:<br>
+      <input type="text" name="brandOwner" required />
+    </label><br><br>
+
+    <label>Upload Gambar:<br>
+      <input type="file" name="file" accept="image/*" required />
+    </label><br><br>
+
     <button type="submit">Submit</button>
   </form>
 
@@ -24,7 +38,6 @@
       e.preventDefault();
 
       const formData = new FormData(form);
-
       resultDiv.innerHTML = '⏳ Mengirim data...';
 
       try {
