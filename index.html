@@ -1,61 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Create Brand</title>
+  <meta charset="UTF-8">
+  <title>Create NFT Series</title>
 </head>
 <body>
-  <h2>Create Brand</h2>
-  <form id="brandForm" enctype="multipart/form-data">
-    <label>Brand Name:</label><br />
-    <input type="text" name="brandName" required /><br /><br />
-
-    <label>Description:</label><br />
-    <textarea name="description" required></textarea><br /><br />
-
-    <label>Registration Date:</label><br />
-    <input type="date" name="registrationDate" required /><br /><br />
-
-    <label>Brand Owner Wallet:</label><br />
-    <input type="text" name="brandOwner" placeholder="0x..." required /><br /><br />
-
-
-    <label>Logo File:</label><br />
-    <input type="file" name="logo" accept="image/*" required /><br /><br />
-
+  <h2>Buat NFT Series</h2>
+  <form id="nftForm" enctype="multipart/form-data">
+    <label>Series ID:<br><input type="number" name="seriesId" required /></label><br><br>
+    <label>Max Supply:<br><input type="number" name="maxSupply" required /></label><br><br>
+    <label>Brand Owner Wallet:<br><input type="text" name="brandOwner" required /></label>
+    
     <button type="submit">Submit</button>
   </form>
 
-  <div id="response" style="margin-top: 20px;"></div>
+  <div id="result" style="margin-top: 20px;"></div>
 
   <script>
-    const form = document.getElementById('brandForm');
-    const responseDiv = document.getElementById('response');
+    const form = document.getElementById('nftForm');
+    const resultDiv = document.getElementById('result');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const formData = new FormData(form);
 
+      resultDiv.innerHTML = '⏳ Mengirim data...';
+
       try {
-        const res = await fetch('https://snap-backend-0ewf.onrender.com/api/brand/create', {
+        const response = await fetch('https://snap-backend-0ewf.onrender.com/api/nft/create', {
           method: 'POST',
           body: formData
         });
 
-        const result = await res.json();
+        const data = await response.json();
 
-        if (result.success) {
-          responseDiv.innerHTML = `
-            <p style="color:green;">✅ Brand created successfully!</p>
-            <p><strong>Metadata URI:</strong> ${result.data.metadataURI}</p>
-            <pre>${JSON.stringify(result.data, null, 2)}</pre>
+        if (data.success) {
+          resultDiv.innerHTML = `
+            ✅ <strong>Berhasil mint ${data.nfts.length} NFT</strong><br>
+            <strong>Series ID:</strong> ${data.seriesId}<br>
+            <strong>Metadata URI:</strong> ${data.metadataURI}<br>
+            <pre style="background:#f4f4f4; padding:10px;">${JSON.stringify(data.nfts, null, 2)}</pre>
           `;
         } else {
-          responseDiv.innerHTML = `<p style="color:red;">❌ ${result.message}</p>`;
+          resultDiv.innerHTML = `<p style="color:red">❌ ${data.message}</p>`;
         }
-      } catch (err) {
-        responseDiv.innerHTML = `<p style="color:red;">❌ Gagal: ${err.message}</p>`;
+      } catch (error) {
+        resultDiv.innerHTML = `<p style="color:red">❌ Gagal: ${error.message}</p>`;
       }
     });
   </script>

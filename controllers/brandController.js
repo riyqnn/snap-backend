@@ -95,10 +95,11 @@ class BrandController {
       });
     }
 
-    const { data, error } = await supabase
-      .from('brands')
-      .select('metadata_uri')
-      .eq('brand_owner', wallet);
+   const { data, error } = await supabase
+  .from('brands')
+  .select('metadata_uri')
+  .eq('brand_owner', wallet)
+  .single(); // <--- ini penting!
 
 
     if (error) throw new Error(`Supabase query error: ${error.message}`);
