@@ -83,6 +83,46 @@ class BrandController {
       });
     }
   }
+
+  async getBrandByWallet(req, res) {
+  try {
+    const { wallet } = req.params;
+
+    if (!wallet) {
+      return res.status(400).json({
+        success: false,
+        message: 'Missing wallet address in params'
+      });
+    }
+
+    const { data, error } = await supabase
+      .from('brands')
+      .select('*')
+      .eq('brand_owner', wallet)
+      .single();
+
+    if (error) throw new Error(`Supabase query error: ${error.message}`);
+    if (!data) {
+      return res.status(404).json({
+        success: false,
+        message: 'Brand not found for this wallet address'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Brand data retrieved successfully',
+      data
+    });
+  } catch (error) {
+    console.error('❌ Error getBrandByWallet:', error.message);
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+}
+
 }
 
 module.exports = new BrandController();
