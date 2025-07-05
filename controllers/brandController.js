@@ -6,7 +6,6 @@ class BrandController {
       const { brandName, description, registrationDate } = req.body;
       const file = req.file;
 
-      // Validasi input
       if (!brandName || !description || !registrationDate || !file) {
         return res.status(400).json({
           success: false,
@@ -14,10 +13,18 @@ class BrandController {
         });
       }
 
-      // === Step 1: Upload file image ke Pinata ===
-      const imageCID = await PinataService.uploadFile(file.buffer, `${brandName}_logo`);
+      // Validasi file type (opsional tapi bagus untuk keamanan)
+      if (!file.mimetype.startsWith('image/')) {
+        return res.status(400).json({
+          success: false,
+          message: 'Uploaded file is not an image'
+        });
+      }
 
-      // === Step 2: Buat JSON metadata ===
+      // === Step 1: Upload file image ke Pinata ===
+      const imageCID = await PinataService.uploadFile(file.buffer, file.originalname);
+
+      // === Step 2: Buat metadata JSON ===
       const metadata = {
         name: `Brand_${brandName}`,
         description,

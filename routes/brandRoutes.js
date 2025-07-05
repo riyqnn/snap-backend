@@ -1,6 +1,7 @@
-// routes/brandRoutes.js
-const express = require('express');
+
 const multer = require('multer');
+const express = require('express');
+
 const BrandController = require('../controllers/brandController');
 
 const router = express.Router();
