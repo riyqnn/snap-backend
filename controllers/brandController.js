@@ -99,7 +99,7 @@ class BrandController {
   .from('brands')
   .select('metadata_uri')
   .eq('brand_owner', wallet)
-  .single(); // <--- ini penting!
+  .single(); 
 
 
     if (error) throw new Error(`Supabase query error: ${error.message}`);
