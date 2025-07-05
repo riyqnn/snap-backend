@@ -1,19 +1,19 @@
 const PinataService = require('../utils/pinataService');
+const BlockchainService = require('../services/blockchainService');
 
 class BrandController {
   async createBrand(req, res) {
     try {
-      const { brandName, description, registrationDate } = req.body;
+      const { brandName, description, registrationDate, wallet, value } = req.body;
       const file = req.file;
 
-      if (!brandName || !description || !registrationDate || !file) {
+      if (!brandName || !description || !registrationDate || !file || !wallet || !value) {
         return res.status(400).json({
           success: false,
-          message: 'Missing required fields or logo file'
+          message: 'Missing required fields (brand info, logo, wallet, or value)'
         });
       }
 
-      // Validasi file type (opsional tapi bagus untuk keamanan)
       if (!file.mimetype.startsWith('image/')) {
         return res.status(400).json({
           success: false,
@@ -21,10 +21,10 @@ class BrandController {
         });
       }
 
-      // === Step 1: Upload file image ke Pinata ===
+      // Step 1: Upload Logo ke Pinata
       const imageCID = await PinataService.uploadFile(file.buffer, file.originalname);
 
-      // === Step 2: Buat metadata JSON ===
+      // Step 2: Buat dan Upload Metadata JSON ke Pinata
       const metadata = {
         name: `Brand_${brandName}`,
         description,
@@ -35,18 +35,22 @@ class BrandController {
         ]
       };
 
-      // === Step 3: Upload metadata JSON ke Pinata ===
       const jsonCID = await PinataService.uploadJSON(metadata, `${brandName}_metadata.json`);
+      const metadataURI = `ipfs://${jsonCID}`;
 
-      // === Step 4: Kirim response sukses ===
+      // Step 3: Verify on Blockchain
+      const txResult = await BlockchainService.verifyBrand(metadataURI, wallet, value);
+
+      // Step 4: Return Response
       return res.status(200).json({
         success: true,
-        message: 'Brand metadata uploaded successfully',
+        message: 'Brand created and verified on blockchain',
         data: {
           imageCID,
           jsonCID,
-          metadataURI: `ipfs://${jsonCID}`,
-          metadata
+          metadataURI,
+          metadata,
+          transaction: txResult
         }
       });
     } catch (error) {
