@@ -1,5 +1,5 @@
 const PinataService = require('../utils/pinataService');
-const BlockchainService = require('../services/blockchainService');
+const BlockchainService = require('../utils/blockchainService');
 
 class BrandController {
   async createBrand(req, res) {
