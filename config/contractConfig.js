@@ -33,7 +33,30 @@ const contractABI = [
     ],
     "stateMutability": "view",
     "type": "function"
-  }
+  },
+   {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "seriesId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "maxSupply",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "brandOwner",
+          "type": "address"
+        }
+      ],
+      "name": "createSeries",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
 ];
 
 exports.initializeContract = (signer) => {
