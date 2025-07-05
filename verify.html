@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Verify NFT</title>
+</head>
+<body>
+  <h2>Hasil Verifikasi NFT</h2>
+  <div id="result">Memuat data...</div>
+
+  <script>
+    const resultDiv = document.getElementById('result');
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    if (!code) {
+      resultDiv.innerHTML = "<p style='color:red'>Verify code tidak ditemukan di URL (gunakan ?code=xxxxx)</p>";
+    } else {
+      fetch(`https://snap-backend-0ewf.onrender.com/api/nfts/verify/${code}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            const nft = data.data;
+            resultDiv.innerHTML = `
+              <h3>NFT Ditemukan</h3>
+              <p><strong>Series ID:</strong> ${nft.series_id}</p>
+              <p><strong>Serial Number:</strong> ${nft.serial_number}</p>
+              <p><strong>Verify Code:</strong> ${nft.verify_code}</p>
+              <p><strong>Created At:</strong> ${new Date(nft.created_at).toLocaleString()}</p>
+              <img src="${nft.url}" style="max-width:300px; margin-top:10px;" />
+              <pre style="background:#f4f4f4; padding:10px;">${JSON.stringify(nft.uri, null, 2)}</pre>
+            `;
+          } else {
+            resultDiv.innerHTML = `<p style="color:red">${data.message || 'NFT tidak ditemukan'}</p>`;
+          }
+        })
+        .catch(error => {
+          resultDiv.innerHTML = `<p style="color:red">Gagal mengambil data: ${error.message}</p>`;
+        });
+    }
+  </script>
+</body>
+</html>
