@@ -1,6 +1,6 @@
 const PinataService = require('../utils/pinataService');
 const BlockchainService = require('../utils/blockchainService');
-const supabase = require('../config/supabaseClient');
+const supabase = require('../database/supabaseClient');
 const { ethers } = require('ethers');
 
 class BrandController {
