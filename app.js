@@ -11,6 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 const cors = require('cors');
 app.use(cors()); // 👈 tambahkan ini sebelum routes
 
+
 app.use('/api/brand', brandRoutes);
 app.use('/api/nft', nftRoutes);
 app.use('/api/nfts', nftOffchainRoutes);

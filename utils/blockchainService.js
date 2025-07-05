@@ -1,12 +1,12 @@
+const { parseEther } = require('ethers');
 const { initializeContract } = require('../config/contractConfig');
-const ethers = require('ethers');
 
 class BlockchainService {
   async verifyBrand(metadataURI, signer, value) {
     try {
       const contract = initializeContract(signer);
       const tx = await contract.verifyBrand(metadataURI, {
-        value: ethers.utils.parseEther(value.toString()),
+        value: parseEther(value.toString()),
         gasLimit: 100000
       });
       const receipt = await tx.wait();
