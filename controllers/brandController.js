@@ -42,14 +42,14 @@ class BrandController {
       const jsonCID = await PinataService.uploadJSON(metadata, `${brandName}_metadata.json`);
       const metadataURI = `ipfs://${jsonCID}`;
 
-      // Step 4: Verify onchain
-      const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
-      const wallet = new ethers.Wallet(process.env.ADMIN_PRIVATE_KEY, provider);
+      // // Step 4: Verify onchain
+      // const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
+      // const wallet = new ethers.Wallet(process.env.ADMIN_PRIVATE_KEY, provider);
 
-      await BlockchainService.verifyBrand(metadataURI, wallet, value);
+      // await BlockchainService.verifyBrand(metadataURI, wallet, value);
 
       // Step 5: Check isVerified from contract
-      const isVerified = await BlockchainService.isVerified(brandOwner, wallet);
+      // const isVerified = await BlockchainService.isVerified(brandOwner, wallet);
 
       // Step 6: Save to Supabase
       const { error: dbError } = await supabase
