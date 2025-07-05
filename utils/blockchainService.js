@@ -1,9 +1,6 @@
 const { ethers, parseEther } = require('ethers');
 const { initializeContract } = require('../config/contractConfig');
 
-const provider = new ethers.JsonRpcProvider(process.env.RPC_URL);
-const signer = new ethers.Wallet(process.env.ADMIN_PRIVATE_KEY, provider);
-
 class BlockchainService {
   async verifyBrand(metadataURI, signer, value) {
     try {
@@ -33,7 +30,6 @@ class BlockchainService {
     }
   }
 
-  // ✅ Tambahkan fungsi ini untuk createSeries
   async createSeries(seriesId, maxSupply, brandOwner, signer) {
     try {
       const contract = initializeContract(signer);
